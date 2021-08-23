@@ -16,7 +16,11 @@
         </ol>
       </td>
     </tr>
+    <tr rowspan="2"></tr>
   </table>
+  <div class="code" *ngIf="tries.length >= 7 || solved">
+    {{ code }}
+  </div>
 </div>
 <div class="myCenter">
   <div id="lock" data-dials="3" class="myLock">
@@ -49,14 +53,14 @@
     <div
       class="btnEnter button"
       (click)="check()"
-      *ngIf="tries.length <= 6"
+      *ngIf="tries.length <= 6 && !solved"
     >
       Enter
     </div>
     <div
       class="btnEnter button"
       (click)="ngOnInit()"
-      *ngIf="tries.length >= 7"
+      *ngIf="tries.length >= 7 || solved"
     >
       Reset
     </div>

@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+} from '@angular/core';
 
 type IResult = '🤘' | '👍' | '👎';
 @Component({
@@ -11,6 +15,7 @@ export class AppComponent implements OnInit {
   title = 'mastermind';
   tries: number[][] = [];
   results: IResult[][] = [];
+  solved = false;
   dialLists = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -45,10 +50,12 @@ export class AppComponent implements OnInit {
     this.tries = [];
     this.results = [];
     this.code = this.getCode();
+    this.solved = false;
   }
 
   check() {
     if (this.tries.length <= 6) {
+      this.solved = false;
       const myTry = [
         this.dialLists[0][1],
         this.dialLists[1][1],
@@ -76,9 +83,9 @@ export class AppComponent implements OnInit {
         '=>',
         this.code,
         myTryResult.sort(),
-        myTryResult.every((c) => c === '🤘')
+        myTryResult.every((c) => c === '🤘'),
       );
-
+      this.solved = myTryResult.every((c) => c === '🤘');
       this.results.push(myTryResult);
       this.tries.push(myTry);
     }

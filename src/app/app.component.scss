@@ -22,12 +22,24 @@
     }
   }
 }
+.code {
+  font-size: 30px;
+  font-family: arial;
+  color: #e9f62f;
+  text-align: center;
+  border: 3px solid rgb(191, 8, 207);
+  background-color: rgb(191, 8, 207);
+  border-radius: 5px;
+  padding: 5px 15px;
+  width: 25%;
+  margin-left: 37%;
+}
 .myCenter {
   // background: #222;
   position: absolute;
   text-align: center;
   margin: auto;
-  height: 390px;
+  height: 215px;
   top: 0px;
   bottom: 0px;
   left: 0px;
