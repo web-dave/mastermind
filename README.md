@@ -1,6 +1,6 @@
 # Mastermind
 
-CSS kommt von [hier](https://codepen.io/MacEvelly/pen/gpGZGZ)
+found the css [here](https://codepen.io/MacEvelly/pen/gpGZGZ)
 
 ## legend
 
