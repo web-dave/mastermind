@@ -1,24 +1,27 @@
-<div class="tries">
+<div class="attempts">
   <table>
     <tr>
       <td>
         <ol>
-          <li *ngFor="let try of tries | slice: 0:4; let i = index">
+          <li
+            *ngFor="let try of attempts | slice: 0:4; let i = index"
+          >
             <span class="fail">{{ try }}</span> => {{ results[i] }}
           </li>
         </ol>
       </td>
       <td>
         <ol>
-          <li *ngFor="let try of tries | slice: 4; let i = index">
-            <span class="fail">{{ try }}</span> => {{ results[i] }}
+          <li *ngFor="let try of attempts | slice: 4; let i = index">
+            <span class="fail">{{ try }}</span> =>
+            {{ results[i + 4] }}
           </li>
         </ol>
       </td>
     </tr>
     <tr rowspan="2"></tr>
   </table>
-  <div class="code" *ngIf="tries.length >= 7 || solved">
+  <div class="code" *ngIf="attempts.length >= maxAttempts || solved">
     {{ code }}
   </div>
 </div>
@@ -53,14 +56,14 @@
     <div
       class="btnEnter button"
       (click)="check()"
-      *ngIf="tries.length <= 6 && !solved"
+      *ngIf="attempts.length <= maxAttempts - 1 && !solved"
     >
       Enter
     </div>
     <div
       class="btnEnter button"
       (click)="ngOnInit()"
-      *ngIf="tries.length >= 7 || solved"
+      *ngIf="attempts.length >= maxAttempts || solved"
     >
       Reset
     </div>

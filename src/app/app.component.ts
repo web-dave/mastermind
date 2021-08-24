@@ -3,17 +3,19 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
 
 type IResult = '🤘' | '👍' | '👎';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent implements OnInit {
+  maxAttempts = 9;
   title = 'mastermind';
-  tries: number[][] = [];
+  attempts: number[][] = [];
   results: IResult[][] = [];
   solved = false;
   dialLists = [
@@ -24,6 +26,12 @@ export class AppComponent implements OnInit {
   ];
 
   code: number[] = [];
+
+  constructor(private swUpdate: SwUpdate) {
+    this.swUpdate.available.subscribe((data) => {
+      location.reload();
+    });
+  }
 
   getCode(length = 4) {
     const availableNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -47,52 +55,54 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tries = [];
+    this.attempts = [];
     this.results = [];
+    this.dialLists = [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    ];
     this.code = this.getCode();
     this.solved = false;
   }
 
   check() {
-    if (this.tries.length <= 6) {
+    if (this.attempts.length <= this.maxAttempts - 1) {
       this.solved = false;
-      const myTry = [
+      const attempt = [
         this.dialLists[0][1],
         this.dialLists[1][1],
         this.dialLists[2][1],
         this.dialLists[3][1],
       ];
-      const myTryResult: IResult[] = ['👎', '👎', '👎', '👎'];
-      const checkedNumbers: number[] = [];
+      const attemptHint: IResult[] = [];
       for (let i = 0; i <= 3; i++) {
-        if (!checkedNumbers.includes(myTry[i])) {
-          checkedNumbers.push(myTry[i]);
-          if (this.code.indexOf(myTry[i]) !== -1) {
-            if (this.code.indexOf(myTry[i]) === i) {
-              console.log(i, myTry[i]);
-              myTryResult[i] = '🤘';
-            } else {
-              myTryResult[i] = '👍';
-            }
-          }
+        if (this.code[i] === attempt[i]) {
+          attemptHint.push('🤘');
+        } else if (attempt.indexOf(this.code[i]) !== -1) {
+          attemptHint.push('👍');
         }
       }
 
       console.log(
-        myTry,
+        attempt,
         '=>',
         this.code,
-        myTryResult.sort(),
-        myTryResult.every((c) => c === '🤘'),
+        attemptHint.sort(),
+        attemptHint.every((c) => c === '🤘') &&
+          attemptHint.length === 4,
       );
-      this.solved = myTryResult.every((c) => c === '🤘');
-      this.results.push(myTryResult);
-      this.tries.push(myTry);
+      this.solved =
+        attemptHint.every((c) => c === '🤘') &&
+        attemptHint.length === 4;
+      this.results.push(attemptHint);
+      this.attempts.push(attempt);
     }
   }
 
   dialMove(i: number) {
-    if (this.tries.length <= 6) {
+    if (this.attempts.length <= this.maxAttempts) {
       const list = this.dialLists[i];
       const first = list[0];
       list.shift();
